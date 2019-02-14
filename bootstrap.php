@@ -8,9 +8,11 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Symfony\Component\Debug\Debug;
+use Symfony\Component\Debug\ErrorHandler;
 
 $loader = require __DIR__ . '/vendor/autoload.php';
-\Symfony\Component\Debug\Debug::enable(E_ALL ^ E_WARNING ^ E_NOTICE);
+Debug::enable(E_ALL ^ E_WARNING ^ E_NOTICE);
 AnnotationRegistry::registerLoader(array($loader, "loadClass"));
 
 $builder = new ContainerBuilder();
@@ -54,5 +56,8 @@ $builder->addDefinitions([
 ]);
 $container = $builder->build();
 Context::setContainer($container);
+
+$handler = ErrorHandler::register();
+$handler->setDefaultLogger($container->get('logger'));
 
 return $container;
