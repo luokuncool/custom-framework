@@ -1,11 +1,11 @@
 db:
-  url: sqlite:///%system.root%/storage/db/data.sqlite3
+  url: "sqlite:///%system.root%/storage/db/data.sqlite3"
 
-logdir: %system.root%/storage/logs
+logdir: "%system.root%/storage/logs"
 
 migrations:
-  dir: %system.root%/src/App/Migrations
+  dir: "%system.root%/src/App/Migrations"
 
 twig:
-  views: %system.root%/resources/views
-  cache: %system.root%/storage/twig/cache
+  views: "%system.root%/resources/views"
+  cache: "%system.root%/storage/twig/cache"
