@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../bootstrap.php';
+
+use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use Doctrine\DBAL\Migrations\Tools\Console\Command\ExecuteCommand;
+use Doctrine\DBAL\Migrations\Tools\Console\Command\GenerateCommand;
+use Doctrine\DBAL\Migrations\Tools\Console\Command\MigrateCommand;
+use Doctrine\DBAL\Migrations\Tools\Console\Command\StatusCommand;
+use Doctrine\DBAL\Migrations\Tools\Console\Command\VersionCommand;
+use Doctrine\DBAL\Migrations\Tools\Console\Helper\ConfigurationHelper;
+use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\QuestionHelper;
+
+$connection    = app('db');
+$config        = app('config');
+$configuration = new Configuration($connection);
+$configuration->setName('My Project Migrations');
+$configuration->setMigrationsNamespace('App\Migrations');
+$configuration->setMigrationsTableName('doctrine_migration_versions');
+$configuration->setMigrationsColumnName('version');
+$configuration->setMigrationsDirectory($config->get('migrations.dir'));
+
+$helperSet = new HelperSet();
+$helperSet->set(new QuestionHelper(), 'question');
+$helperSet->set(new ConnectionHelper($connection), 'db');
+$helperSet->set(new ConfigurationHelper($connection, $configuration));
+
+$cli = new Application('Doctrine Migrations');
+$cli->setCatchExceptions(true);
+$cli->setHelperSet($helperSet);
+
+$cli->add(new ExecuteCommand());
+$cli->add(new StatusCommand());
+$cli->add(new GenerateCommand());
+$cli->add(new MigrateCommand());
+$cli->add(new VersionCommand());
+
+$cli->run();
