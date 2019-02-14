@@ -2,11 +2,20 @@
 
 namespace App\Repository;
 
+use DI\Annotation\Inject;
+use Doctrine\DBAL\Connection;
+
 class SettingRepo
 {
+    /**
+     * @Inject("db")
+     * @var Connection
+     */
+    private $db;
+
     public function get($key)
     {
-        $result = app('db')->createQueryBuilder()->select('value')
+        $result = $this->db->createQueryBuilder()->select('value')
             ->from('setting')
             ->where("key = :key")
             ->setParameter('key', $key)
@@ -18,15 +27,15 @@ class SettingRepo
     public function set($key, $value, $description = '')
     {
         if ($this->get($key)) {
-            app('db')->update('setting', ['value' => $value], ['key' => $key]);
+            $this->db->update('setting', ['value' => $value], ['key' => $key]);
         } else {
-            app('db')->insert('setting', ['key' => $key, 'value' => $value, 'description' => $description]);
+            $this->db->insert('setting', ['key' => $key, 'value' => $value, 'description' => $description]);
         }
     }
 
     public function all()
     {
-        return app('db')->createQueryBuilder()->select('*')
+        return $this->db->createQueryBuilder()->select('*')
             ->from('setting')
             ->execute()->fetchAll();
     }

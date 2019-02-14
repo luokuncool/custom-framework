@@ -13,8 +13,8 @@ use Symfony\Component\Debug\ErrorHandler;
 
 $loader = require __DIR__ . '/vendor/autoload.php';
 Debug::enable(E_ALL ^ E_WARNING ^ E_NOTICE);
-AnnotationRegistry::registerLoader(array($loader, "loadClass"));
 
+AnnotationRegistry::registerLoader(array($loader, "loadClass"));
 $builder = new ContainerBuilder();
 $builder->useAnnotations(true);
 $builder->addDefinitions([
