@@ -1,0 +1,8 @@
+/.idea
+/vendor
+/storage/db/*
+!/storage/db/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/twig/*
+!/storage/twig/.gitkeep
